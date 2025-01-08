@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 use App\Http\Controllers\LaptopController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\SuperadminController;
 use App\Http\Controllers\ProductController;
@@ -32,7 +33,7 @@ Route::group(['middleware' => 'guest'], function() {
 
 });
 
-// untuk superadmin dan pegawai
+// untuk superadmin dan login user
 Route::group(['middleware' => ['auth', 'checkrole:1,2']], function() {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/redirect', [RedirectController::class, 'cek']);
@@ -50,7 +51,7 @@ Route::group(['middleware' => ['auth', 'checkrole:1']], function() {
     Route::delete('/superadmin/{id}', [SuperadminController::class, 'destroy'])->name('superadmin.destroy');
 });
 
-// untuk pegawai
+// untuk login biasa
 Route::group(['middleware' => ['auth', 'checkrole:2']], function() {
     Route::get('/products', [ProductController::class, 'index'])->name('product.index');
     Route::get('/products/{id}', [ProductController::class, 'show'])->name('product.show');
@@ -63,3 +64,6 @@ Route::group(['middleware' => ['auth', 'checkrole:2']], function() {
 
 
 });
+
+Route::get('/register', [RegisterController::class, 'create'])->name('register');
+Route::post('/register', [RegisterController::class, 'store']);
